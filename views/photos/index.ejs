@@ -42,9 +42,7 @@
             <%-cloudinary.image(photo.image.public_id, {transformation: [ 
               {width: 150, height: 150, quality: 80,crop:'fill',format:'jpg',class:'thumbnail inline'},
               {effect: "saturation:50"}, 
-              {overlay:
-              {url:"https://res.cloudinary.com/dbhukwal/image/upload/v1568674498/samples/cloudinary-icon.png"},
-              width: "0.25", flags: "relative", gravity: "north_east", y: 10, x: 10}]} )%>
+              {overlay:"cloudinary_icon", width: "0.25", flags: "relative", gravity: "north_east", y: 10, x: 10}]} )%>
           </a>
           
           <div class="less_info">
@@ -60,8 +58,31 @@
                 { crop : "fit", height : 150, width : 150 },
                 { crop : "thumb", gravity : "face", height : 150, width : 150 },
                 { format : "png", angle : 20, transformation : { 
-                  crop : "fill", gravity : "north", effect : "sepia", height : 150, width : 150 } }
+                  crop : "fill", gravity : "north", effect : "sepia", height : 150, width : 150 } },
+
+                <!-- Below transformation code changes the image saturation by 50% -->
+                { crop : "fill", height : 150, width : 150, transformation: { effect: "saturation:50" } },
+
+                <!-- Below overlay transformation uses 'cloudinary_icon' image present in root medial library -->
+                { crop : "fill", height : 150, width : 150, 
+                  transformation : { overlay: "cloudinary_icon", width: "0.25", flags: "relative", gravity: "north_east", y: 10, x: 10}
+                },
+                
+                <!-- Below overlay transformation uses 'cloudinary-icon' image present in 'samples' sub-folder -->
+                <!-- User shall update the foldername:filename accordingly -->
+                { crop : "fill", height : 150, width : 150, 
+                  transformation : { overlay: "samples:cloudinary-icon", width: "0.25", flags: "relative", gravity: "north_east", y: 10, x: 10}
+                },
+
+                <!-- Below overlay transformation uses 'cloudinary-icon' using its url address -->
+                <!-- User can use any image url to change the overlay image -->
+                { crop : "fill", height : 150, width : 150, 
+                  transformation : {overlay:
+                    {url:"https://res.cloudinary.com/dbhukwal/image/upload/v1568674498/samples/cloudinary-icon.png"},
+                    width: "0.25", flags: "relative", gravity: "north_east", y: 10, x: 10}
+                }
               ] %>
+              
             <% transformations.forEach(function(image_params) {%>
 
               <td>
@@ -70,12 +91,13 @@
                     <img src="<%=cloudinary.url(photo.image.public_id,image_params)%>" class="thumbnail inline"/>
                   </a>
                 </div>
-                <table class="info">
+                <table class="info">                  
                   <% for (var key in image_params){%>
                     <tr>
                       <td><%= key %></td>
-                      <td><%= JSON.stringify(image_params[key]) %></td>
+                      <td><%= JSON.stringify(image_params[key]) %></td>                      
                     </tr>
+                    
                   <% } %>  
                 </table>
                 <br/>
